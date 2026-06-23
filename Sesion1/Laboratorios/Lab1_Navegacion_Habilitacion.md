@@ -86,7 +86,7 @@ Es fundamental comprender el alcance de los dos paneles de configuración princi
 *   **Agent pools (Pools de agentes)**: Gestión de la infraestructura de agentes que compilan y despliegan código. Aquí administras tanto los agentes compartidos alojados en Azure (Microsoft-hosted) como tus propios agentes privados instalados en servidores On-Premise.
 *   **Settings (Ajustes de compilación)**: Configuraciones globales para pipelines (ej: deshabilitar pipelines clásicos basados en interfaz visual para forzar el uso de YAML estructurado por seguridad).
 *   **Deployment pools (Pools de despliegue)**: Agrupaciones lógicas de servidores y máquinas físicas internas de destino sobre las cuales se realizarán las instalaciones y configuraciones.
-*   **Parallel jobs (Trabajos en paralelo)**: Muestra la capacidad disponible y los límites contratados para ejecutar ejecuciones de pipelines en simultáneo (tanto para Linux/Windows provistos por Microsoft como autogestionados).
+*   **Parallel jobs (Trabajos en paralelo)**: Muestra la capacidad disponible y los límites contratados para la ejecución simultánea de pipelines, tanto en agentes hospedados por Microsoft (Linux y Windows) como en agentes autogestionados.
 *   **OAuth configurations (Configuraciones OAuth)**: Mapeo y registro de aplicaciones externas que se integrarán con la organización de Azure DevOps de forma segura mediante tokens temporales.
 
 #### 2. Explorar Project Settings (Configuración del Proyecto)
