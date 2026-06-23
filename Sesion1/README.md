@@ -9,7 +9,7 @@ Esta sesión de 4 horas proporciona una introducción exhaustiva a **Azure DevOp
 ```
 00:00 ────────────────── 00:45 ───────────── 01:30 ─────────────────── 02:30 ────────────────────── 03:30 ───────── 04:00
   │ Introducción a la       │ Modelo          │ Validación de         │ Parametrización Básica:     │ Preguntas y  │
-  │ Arquitectura, Alcance   │ Operativo       │ Prerrequisitos y      │ Usuarios, Roles, Permisos  │ Cierre de la │
+  │ Arquitectura, Alcance   │ Operativo       │ Prerrequisitos y      │ Usuarios, Roles, Permisos   │ Cierre de la │
   │ y Licenciamiento        │ Esperado        │ Navegación Inicial    │ y Aislamiento de Entornos   │ Sesión       │
 ```
 
