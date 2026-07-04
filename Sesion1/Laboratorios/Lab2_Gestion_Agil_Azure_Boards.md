@@ -150,7 +150,7 @@ Vaya a **Boards > Boards** para ver el flujo Kanban visual de las Historias de U
     *   **Column name**: `In Review` (En Revisión).
     *   **State**: Seleccione `Active` (esto mapea la columna al estado activo de flujo de trabajo).
     *   **WIP limit**: Escriba `3` (límite de historias simultáneas que pueden estar en revisión para evitar cuellos de botella).
-4.  Arrastre la columna `In Review` para posicionarla entre `Doing` y `Done`.
+4.  Arrastre la columna `In Review` para posicionarla entre `Active` y `Resolved`.
 5.  Haga clic en **Save** en la parte inferior derecha.
 
 #### 2. Configurar Swimlanes (Líneas de Servicio de Alta Prioridad)
@@ -213,7 +213,7 @@ La planificación de capacidad permite medir si el compromiso del equipo es real
 #### 3. Estimar Tareas y Asignar Responsables en el Taskboard
 Con los elementos asignados correctamente a la iteración, las tareas ahora se mostrarán en su tablero:
 1.  Haga clic en la pestaña **Taskboard** (Tablero de Tareas) en la parte superior.
-2.  Ahora verá las Historias de Usuario (ej. `User Story 1.1.1` y `User Story 1.1.2`) listadas horizontalmente como filas, y sus tareas hijas vinculadas aparecerán como tarjetas independientes en la columna **To Do**.
+2.  Ahora verá las Historias de Usuario (ej. `User Story 1.1.1` y `User Story 1.1.2`) listadas horizontalmente como filas, y sus tareas hijas vinculadas aparecerán como tarjetas independientes en la columna **New**.
 3.  Haga clic en el título de la tarjeta de la tarea **`Task 1.1.1.1: Descargar e instalar binarios del Runner`** para abrirla:
     *   **Assigned To**: Asígnela a su propio usuario (ej: `Edwin Harley Bermudez Cuervo`).
     *   **Remaining Work** (Trabajo Restante): Ingrese `8` (representa 8 horas de esfuerzo estimado).
@@ -233,7 +233,7 @@ Con los elementos asignados correctamente a la iteración, las tareas ahora se m
 
 #### 5. Uso del Taskboard en las Daily Standups
 1.  Durante la reunión diaria de sincronización (Daily), los miembros del equipo acceden a la pestaña **Taskboard**.
-2.  Con una interacción simple de arrastrar y soltar (Drag & Drop), mueva la tarjeta de la tarea **`Task 1.1.1.1`** de `To Do` a `In Progress` y finalmente a `Done` para reflejar el progreso en tiempo real.
+2.  Con una interacción simple de arrastrar y soltar (Drag & Drop), mueva la tarjeta de la tarea **`Task 1.1.1.1`** de `New` a `Active` y finalmente a `Closed` para reflejar el progreso en tiempo real.
 
 ---
 
