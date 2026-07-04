@@ -1,6 +1,6 @@
-# 📚 Sesión 2: Estrategia CI/CD e Integración Híbrida
+# 📚 Sesión 2: Estrategia CI/CD, Integración Híbrida y Despliegues PHP en Ubuntu
 
-Esta sesión de 4 horas aborda la automatización estratégica de compilaciones y entregas de software. Nos enfocamos en el diseño de Pipelines modernos en YAML, el uso de Feeds privados en **Azure Artifacts** y la arquitectura detallada para integrar de forma segura repositorios corporativos de **GitLab On-Premise** utilizando **Self-Hosted Agents** (Runners).
+Esta sesión de 4 horas aborda la automatización estratégica de compilaciones y entregas de software para aplicaciones en **PHP 7.4 y 8.x** desplegadas en servidores locales (on-premises) **Ubuntu**. Diseñamos una arquitectura híbrida integrada donde el código reside en **GitLab**, el pipeline se orquesta mediante **Azure Pipelines** y los despliegues se ejecutan automáticamente en servidores internos a través de **Agentes Auto-Hospedados (Self-hosted Agents)**.
 
 ---
 
@@ -8,100 +8,171 @@ Esta sesión de 4 horas aborda la automatización estratégica de compilaciones 
 
 ```
 00:00 ────────────────── 01:15 ───────────── 02:30 ─────────────────── 03:15 ────────────────────── 04:00
-  │ Conceptos Generales     │ Pipelines y     │ Integración Híbrida   │ Buenas Prácticas,           │
-  │ de CI/CD: Flujos,       │ Artifacts       │ con GitLab On-Premise:│ Gobernanza y Plan de         │
-  │ Ambientes y Aprobación  │ (Estructura)    │ Arquitectura y Red    │ Adopción Gradual            │
+  │ Módulo 1: Ramificación, │ Módulo 2: Reuso │ Módulo 3: Agentes     │ Módulo 4: Ciclo PHP y       │ Módulo 5: DORA,     │
+  │ Workflows y Ambientes   │ Variables/YAML  │ Híbridos en Ubuntu    │ Pruebas REST / SOAP         │ Gobernanza y Cierre │
 ```
 
 ---
 
 ## 📂 Laboratorios de esta Sesión
-*   [**Lab 4: Implementación de Pipeline CI/CD con YAML y Artifacts**](Laboratorios/Lab4_Pipelines_Artifacts.md)
-*   [**Lab 5: Integración Híbrida con GitLab (Uso de Runners en KodeKloud)**](Laboratorios/Lab5_Integracion_GitLab_Hybrid.md)
+*   [**Lab 4: Instalación y Configuración del Agente Auto-Hospedado en Linux Ubuntu**](Laboratorios/Lab4_Pipelines_Artifacts.md)
+*   [**Lab 5: Pipeline Híbrido en Azure Pipelines, Pruebas REST/SOAP y Despliegue en Apache**](Laboratorios/Lab5_Integracion_GitLab_Hybrid.md)
+*   [**Lab 6: Pipeline Híbrido, Pruebas y Despliegue en Windows de una Aplicación Python**](Laboratorios/Lab6_Pipeline_Windows_Python.md)
 
 ---
 
 ## 📖 Contenido Teórico y Consultivo
 
-### Módulo 1: Conceptos Generales de CI/CD (75 min)
+### Módulo 1: Estrategia de Ramas, Workflows y Ambientes (75 min)
 
-#### 1. Ciclo de Vida CI/CD y Ambientes Lógicos
-El ciclo de CI/CD busca automatizar el flujo desde que el código es modificado por un desarrollador hasta que está operando en Producción.
+#### 1. Estrategias de Ramificación (Branching Strategies)
+La estrategia de ramas define cómo los desarrolladores colaboran y cómo el código fluye hacia producción. Para el modelo híbrido del cliente, analizamos dos enfoques:
+
+*   **GitFlow (Recomendado para lanzamientos estructurados)**:
+    *   `develop`: Rama de integración de nuevas características. Detona el despliegue automático al ambiente de **Desarrollo**.
+    *   `feature/*`: Ramas temporales de desarrollo. Requieren Pull Requests (PR) hacia `develop`.
+    *   `release/*`: Preparación de versiones estables.
+    *   `main` (o `master`): Código productivo. Cada fusión en esta rama detona el despliegue al ambiente de **Producción** (previo paso por aprobaciones manuales).
+    *   `hotfix/*`: Parches rápidos para producción que se fusionan de inmediato en `main` y `develop`.
+*   **Trunk-Based Development (Recomendado para alta frecuencia de entregas)**:
+    *   Todos los desarrolladores trabajan sobre una única rama troncal (`main`).
+    *   Se utilizan ramas de corta duración (< 2 días).
+    *   Se mitiga el riesgo de despliegues mediante banderas de características (*Feature Flags*).
 
 ```
- Desarrollo      Integración Continua (CI)            Entrega Continua (CD)
-  ┌──────┐       ┌────────┐    ┌────────┐       ┌────────┐    ┌───────┐    ┌───────┐
-  │ Code ├──────►│ Build  ├───►│ Test   ├──────►│ Deploy ├───►│ UAT   ├───►│ Prod  │
-  └──────┘       └────────┘    └────────┘       └────────┘    └───────┘    └───────┘
+   [Feature branch]  ───┐ (Pull Request)
+                        ▼
+   [develop] ───────────────────────────► (CI/CD automático a Desarrollo)
+                        │
+                        ▼ (Fusión/Release)
+   [main]    ───────────────────────────► (CD con Aprobación a Producción)
 ```
 
-*   **Integración Continua (CI)**: Proceso automatizado de compilación, análisis estático de código (SonarQube) y ejecución de pruebas unitarias al hacer cambios en una rama.
-*   **Entrega Continua (CD)**: Despliegue automatizado de los artefactos generados en la fase de CI hacia los distintos ambientes (Dev, QA, Stage, Prod).
+#### 2. Ciclo de Vida Multietapa y Ambientes de Despliegue
+En este entorno híbrido, el flujo se divide en etapas claras con responsabilidades definidas:
 
-#### 2. Estrategias de Aprobación y Gobernanza (Environments)
-En entornos empresariales, el despliegue automático a producción sin supervisión suele ser riesgoso. Azure DevOps provee el concepto de **Environments** (Entornos):
-*   **Aprobaciones Manuales**: Permite asignar a personas o grupos específicos (ej. Líder de QA, Administrador de Infraestructura) que deben validar y autorizar manualmente la ejecución antes de iniciar el despliegue a producción.
-*   **Gates (Compuertas Automáticas)**: Ejecutan consultas de salud (ej. validar si hay alertas en Azure Monitor, o si hay incidentes activos en ServiceNow) antes de proceder con el despliegue.
+*   **Ambiente de Desarrollo (Dev)**:
+    *   *Objetivo*: Validación funcional rápida por el equipo de ingeniería.
+    *   *Disparador*: Automático ante cambios en la rama `develop` (o equivalentes de integración).
+    *   *Configuración*: Servidores de prueba con perfiles de depuración activos.
+*   **Ambiente de Producción (Prod)**:
+    *   *Objetivo*: Entrega de valor a los usuarios finales con alta disponibilidad.
+    *   *Disparador*: Fusión en la rama `main`, sujeta a **Aprobación Manual (Manual Approvals)** y políticas de calidad automáticas (*Gates*).
+    *   *Configuración*: Servidores endurecidos en seguridad, optimizados para rendimiento y con logs de depuración desactivados.
 
 ---
 
-### Módulo 2: Estructura de Pipelines y Artifacts (75 min)
+### Módulo 2: Anatomía de Pipelines, Grupos de Variables y Reutilización (75 min)
 
-#### 1. Anatomía de un Pipeline YAML
-Azure DevOps recomienda declarar los pipelines como código en formato **YAML** (guardados en el repositorio) en lugar del modelo clásico visual.
+#### 1. Integración de Repositorios GitLab en Azure Pipelines
+Azure Pipelines puede conectarse a repositorios alojados en servidores de GitLab (tanto SaaS como auto-hospedados GitLab Self-Managed) a través de una **Service Connection**.
+*   **Triggering**: Azure DevOps instala webhooks en GitLab para recibir notificaciones cuando se realiza un `push` o se crea un Merge Request, desencadenando la ejecución del pipeline YAML en Azure DevOps.
 
-*   **Trigger**: Evento que detona el pipeline (ej. commit en `main`).
-*   **Stages**: Divisiones principales del pipeline (ej. Stage de Compilación, Stage de QA, Stage de Prod).
-*   **Jobs**: Bloques lógicos de ejecución que corren dentro de un Agente.
-*   **Steps/Tasks**: Las acciones secuenciales (ej. instalar SDK, compilar código, copiar archivos).
+#### 2. Variable Groups (Grupos de Variables) y Secretos
+Los secretos y variables de entorno nunca deben almacenarse en texto plano en el repositorio.
+*   **Variable Groups (Library)**: Permiten agrupar variables reutilizables a nivel de todo el proyecto de Azure DevOps.
+*   **Seguridad y Scoping**:
+    *   Es posible enlazar un grupo de variables con **Azure Key Vault** para recuperar secretos dinámicamente en tiempo de ejecución.
+    *   Se definen permisos de acceso a nivel de pipeline y restricciones de uso para entornos específicos (ej. el grupo `prod-secrets` solo puede ser consumido por ejecuciones destinadas a `Prod-Environment`).
 
-#### 2. Azure Artifacts
-Sirve como gestor de paquetes privado e integrado (npm, NuGet, Maven, Python). Permite almacenar artefactos reutilizables en lugar de guardarlos en el repositorio Git, acelerando sustancialmente el proceso de compilación y asegurando que las librerías compartidas mantengan control de versiones estricto.
+#### 3. Reutilización: De Task Groups (Clásicos) a YAML Templates (Modernos)
+En la interfaz visual clásica de Azure DevOps se utilizaban los *Task Groups* para reutilizar pasos comunes. En pipelines basados en YAML, la mejor práctica de ingeniería es usar **YAML Templates**:
 
----
-
-### Módulo 3: Estrategia de Integración con GitLab On-Premise (45 min)
-
-Cuando el cliente mantiene su código fuente en un servidor **GitLab On-Premise** (dentro de su propio centro de datos o red corporativa privada), se requiere una arquitectura híbrida para compilar y desplegar de manera segura.
-
-#### 1. Arquitectura de Red con Agentes Auto-Hospedados (Self-hosted Runners)
-Un error común es creer que para integrar GitLab On-Premise con Azure DevOps o herramientas Cloud se deben abrir puertos entrantes (*Inbound Ports*) en el Firewall corporativo para recibir peticiones externas.
-
-> [!IMPORTANT]
-> **Modelo de Comunicación Saliente (Outbound-only)**:
-> Los agentes de compilación (GitLab Runners o Azure Pipelines Agents) instalados internamente en la red del cliente **no requieren puertos abiertos de entrada**.
-> Los Runners inician la comunicación hacia GitLab mediante peticiones HTTPS salientes periódicas (Long Polling) por el puerto **443**.
-
-```
-  ┌──────────────────────────────────────────────┐              ┌────────────────────────┐
-  │         Red Interna del Cliente (LAN)        │              │  Nube Pública (Cloud)  │
-  │                                              │              │                        │
-  │  ┌───────────────┐        ┌───────────────┐  │  Port 443    │  ┌──────────────────┐  │
-  │  │ GitLab Server │◄───────┤ GitLab Runner │──┼─────────────►│  │ Azure DevOps /   │  │
-  │  │  (On-Premise) │  Local │ (Self-hosted) │  │  Outbound    │  │ GitLab SaaS      │  │
-  │  └───────────────┘        └───────────────┘  │              │  └──────────────────┘  │
-  └──────────────────────────────────────────────┘              └────────────────────────┘
-```
-
-#### 2. Consideraciones de Seguridad y Red Corporativa
-Al implementar Runners auto-hospedados dentro de la infraestructura corporativa, se deben aplicar las siguientes medidas de gobernanza:
-*   **Aislamiento de Recursos**: Los Runners deben ejecutarse en máquinas virtuales dedicadas, no en servidores compartidos con bases de datos u otros servicios de negocio.
-*   **Uso de Docker en Runners (Docker-in-Docker)**: Si los pipelines compilan imágenes de contenedores Docker, restrinja el acceso a `/var/run/docker.sock` ya que da privilegios de root sobre el sistema anfitrión.
-*   **Servidores Proxy y DNS**: Si la red corporativa utiliza servidores proxy para salir a internet, el Runner debe ser configurado con las variables de entorno `http_proxy`, `https_proxy` y `no_proxy` para permitir la salida segura y el tráfico local sin intermediación.
+*   **Modularidad**: Los templates permiten empaquetar tareas repetitivas (como instalar dependencias con Composer o ejecutar suites de pruebas unitarias).
+*   **Ejemplo de llamada a un Template**:
+    ```yaml
+    steps:
+    - template: templates/php-test-template.yml
+      parameters:
+        phpVersion: '8.1'
+        testType: 'REST'
+    ```
+*   **Gobernanza**: Los equipos de seguridad pueden crear repositorios dedicados a almacenar templates y forzar a que todos los pipelines consuman dichas plantillas aprobadas.
 
 ---
 
-### Módulo 4: Buenas Prácticas de Administración y Adopción (45 min)
+### Módulo 3: Arquitectura Híbrida y Agentes Heterogéneos (Ubuntu y Windows) (45 min)
 
-1.  **Secretos y Variables**: Nunca almacene contraseñas, llaves de API o firmas digitales en texto plano dentro de su código o archivos YAML. Utilice variables secretas integradas, o integre **Azure Key Vault** / **HashiCorp Vault**.
-2.  **Plantillas Reutilizables (Templates)**: Cree pipelines base definidos por el equipo de seguridad y fuércese a que los equipos de desarrollo los incluyan (ej. plantilla para análisis de SonarQube obligatorio).
-3.  **Plan de Adopción Progresivo**:
-    *   *Fase 1*: Estandarizar el uso de Git y flujos de trabajo (GitFlow).
-    *   *Fase 2*: Implementar Builds automatizados (CI) para validar código.
-    *   *Fase 3*: Habilitar despliegues automatizados (CD) en ambientes no productivos.
-    *   *Fase 4*: Automatizar Producción con gobernanza estricta (Aprobaciones manuales y métricas de calidad).
+Cuando los servidores destino son on-premises (locales) o virtuales bajo arquitecturas heterogéneas, se requiere el uso de **Agentes Auto-Hospedados (Self-hosted Agents)** tanto en **Linux Ubuntu** como en **Microsoft Windows**. Ambos agentes permiten ejecutar tareas locales interactuando con la infraestructura del cliente.
+
+```
+┌──────────────────────────────────────────────┐              ┌────────────────────────┐
+│         Red Interna del Cliente (LAN)        │              │  Nube Pública (Cloud)  │
+│                                              │              │                        │
+│  ┌───────────────┐        ┌───────────────┐  │  Port 443    │  ┌──────────────────┐  │
+│  │ Servidor Web  │◄───────┤ Self-hosted   │──┼─────────────►│  │ Azure DevOps /   │  │
+│  │ Apache (PHP)  │  Local │ Agent (Ubuntu)│  │  Outbound    │  │ GitLab SaaS      │  │
+│  └───────────────┘        └───────────────┘  │              │  └──────────────────┘  │
+└──────────────────────────────────────────────┘              └────────────────────────┘
+```
+
+#### 1. Comunicación Saliente Unidireccional (Outbound-only)
+*   El agente corre como un servicio daemon en el servidor Ubuntu del cliente.
+*   **No requiere puertos de entrada abiertos** en el firewall. Solo requiere conexión saliente HTTPS por el puerto **443** hacia la URL de Azure DevOps (`dev.azure.com`).
+*   Utiliza un mecanismo de *Long Polling* para consultar si hay trabajos pendientes de ejecución en la cola del pool de agentes.
+
+#### 2. Configuración Detrás de Proxy Corporativo
+Si el servidor del cliente requiere salir por un servidor proxy, configure las variables de entorno correspondientes en el archivo `.env` del agente (`http_proxy`, `https_proxy`, `no_proxy`) o cree archivos de configuración del servicio systemd. Esto asegura que la comunicación HTTPS se enrute correctamente y las direcciones de red locales no pasen por el proxy.
+
+#### 3. Manejo de Certificados de CA Corporativa
+Si la red interna utiliza interceptación SSL/TLS o si el GitLab local tiene un certificado SSL privado:
+*   El agente debe ser configurado con la variable `SSLCERT` apuntando al llavero de certificados de la entidad certificadora de la empresa (`/etc/ssl/certs`).
+*   Esto previene el error común de rechazo de certificados TLS autofirmados.
+
+---
+
+### Módulo 4: Ciclo de Vida de Despliegue PHP y Automatización de Pruebas (45 min)
+
+#### 1. Empaquetado y Artefactos en PHP
+PHP es un lenguaje interpretado, por lo que su despliegue consiste en la transferencia y configuración de archivos de código fuente, no en una compilación binaria.
+*   **Optimización de Dependencias**: Durante el pipeline de integración (CI), es mandatorio instalar las dependencias con:
+    ```bash
+    composer install --no-dev --optimize-autoloader
+    ```
+    Esto excluye librerías de prueba (como PHPUnit) y optimiza el mapa de clases para ejecución rápida en producción.
+*   **Generación del Artefacto**: Los archivos de la aplicación y dependencias de producción se empaquetan en un archivo comprimido (`.zip` o `.tar.gz`) que se publica como artefacto del pipeline, garantizando la inmutabilidad de la entrega.
+
+#### 2. Estructura de Directorios y Permisos en Apache (Ubuntu)
+Un error crítico en despliegues automatizados es dar permisos de superusuario (`sudo`) al pipeline para escribir en `/var/www/html/` o dejar los permisos abiertos (`777`). La mejor práctica recomendada es:
+*   Crear directorios de aplicaciones independientes: `/var/www/html/desarrollo` y `/var/www/html/produccion`.
+*   El servicio del agente auto-hospedado debe ejecutarse bajo un usuario local dedicado (ej. `azdevops`).
+*   Configurar la pertenencia del grupo al grupo de Apache (`www-data`):
+    ```bash
+    sudo chown -R azdevops:www-data /var/www/html/desarrollo
+    sudo chmod -R 775 /var/www/html/desarrollo
+    sudo chmod g+s /var/www/html/desarrollo # Mantiene el grupo en nuevos archivos
+    ```
+*   Configurar PHP-FPM o Apache para leer los directorios correspondientes.
+
+#### 3. Inyección Dinámica de Configuraciones (`.env`)
+Los archivos `.env` o archivos de configuración específicos de la aplicación (ej. bases de datos, llaves de API) no se suben al control de versiones.
+*   El pipeline de despliegue (CD) lee las variables del **Variable Group** y escribe de forma dinámica el archivo de configuración en el servidor objetivo justo antes del despliegue final.
+
+#### 4. Estrategia de Pruebas: REST y SOAP
+Dado que el cliente cuenta con aplicaciones de servicios meteorológicos que consumen y exponen APIs:
+
+*   **Pruebas REST**:
+    *   Se ejecutan llamadas automatizadas utilizando herramientas basadas en Node como **Newman** (ejecutor CLI de colecciones Postman) o scripts PHP usando la biblioteca cURL.
+    *   Validan códigos de estado HTTP (200, 201), cabeceras de respuesta y la estructura del payload JSON devuelto.
+*   **Pruebas SOAP (Web Services XML)**:
+    *   Dado que SOAP depende fuertemente de esquemas XML (WSDL), se estructuran payloads XML usando plantillas y se envían peticiones POST HTTP mediante cURL o mediante el componente nativo de PHP **`SoapClient`**.
+    *   Se valida la integridad del XML, la estructura del *Envelope* y la ausencia de *SoapFaults* en la respuesta del servidor.
+
+---
+
+### Módulo 5: Métricas de Despliegue y Gobernanza (DORA) (45 min)
+
+Para medir la madurez DevOps de la organización, se implementa el marco de métricas de **DORA** (DevOps Research and Assessment):
+
+| Métrica DORA | Definición | Aplicación en el Entorno del Cliente |
+| :--- | :--- | :--- |
+| **Deployment Frequency (DF)** | Qué tan seguido se despliega código con éxito a Producción. | Medido mediante el registro automático de ejecuciones exitosas de la etapa de Producción en Azure Pipelines. Objetivo: Semanal/Diario. |
+| **Lead Time for Changes (LT)** | Tiempo total que toma a un commit pasar desde su push inicial hasta estar corriendo en producción. | Calculado a través de la integración de commits de GitLab y la fecha de ejecución del despliegue en Azure DevOps. Objetivo: < 1 día. |
+| **Mean Time to Recover (MTTR)** | Tiempo promedio requerido para restaurar el servicio ante una degradación o falla en producción. | Integrado con sistemas de alertas de salud (ej. HTTP Healthcheck). Se mide el tiempo transcurrido hasta un hotfix exitoso. Objetivo: < 1 hora. |
+| **Change Failure Rate (CFR)** | El porcentaje de despliegues en producción que resultan en fallas del servicio o requieren corrección inmediata (rollbacks). | Se registra cuántas veces un pipeline de producción requiere un hotfix o rollback directo tras un despliegue. Objetivo: < 15%. |
 
 ---
 
 > [!TIP]
-> Proceda ahora al [**Lab 4**](Laboratorios/Lab4_Pipelines_Artifacts.md) para configurar su primer Pipeline multi-stage en YAML.
+> Proceda ahora al [**Lab 4**](Laboratorios/Lab4_Pipelines_Artifacts.md) para iniciar con la instalación y configuración del Agente Auto-Hospedado en su servidor Linux Ubuntu.
+

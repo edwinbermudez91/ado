@@ -56,6 +56,45 @@ El acceso a Azure DevOps se gestiona mediante niveles de acceso (Access Levels) 
 *   **Visual Studio Subscribers (Incluido en la suscripción de VS)**:
     *   Los usuarios con suscripciones de Visual Studio Professional o Enterprise entran al nivel Basic (o Basic+Test Plans en el caso de Enterprise) sin costo adicional en Azure DevOps.
 
+#### 3. Componentes de la Suite Azure DevOps
+Azure DevOps es una plataforma integrada que proporciona cinco componentes de software principales para cubrir todo el ciclo de vida de desarrollo de software (DevSecOps):
+
+*   **Azure Boards (Planificación y Gestión Ágil)**:
+    *   *Propósito*: Permite a los equipos planificar, realizar el seguimiento y discutir el trabajo a través de tableros Kanban, backlogs de producto e iteraciones de Scrum.
+    *   *Conceptos Clave*:
+        *   **Work Items**: Unidades de trabajo (Epic, Feature, User Story, Task, Bug) que registran el estado, asignación, prioridad y relaciones del trabajo.
+        *   **Boards**: Tableros visuales Kanban para optimizar el flujo de trabajo arrastrando tarjetas a lo largo de columnas de estado.
+        *   **Backlogs**: Lista priorizada de trabajo pendiente que ayuda a planificar entregas y gestionar el alcance del producto.
+        *   **Sprints**: Iteraciones de tiempo fijo (generalmente 2 semanas) para planificar la capacidad del equipo y el compromiso de entregas.
+        *   **Queries**: Filtros avanzados para buscar, agrupar y visualizar Work Items mediante informes y gráficos en dashboards.
+*   **Azure Repos (Gestión de Control de Versiones)**:
+    *   *Propósito*: Aloja repositorios privados de código fuente y proporciona herramientas de revisión por pares mediante flujo de trabajo Git.
+    *   *Conceptos Clave*:
+        *   **Git**: Sistema de control de versiones distribuido moderno utilizado por defecto en la industria.
+        *   **TFVC (Team Foundation Version Control)**: Sistema de control de versiones centralizado tradicional (útil para bases de código heredadas y pesadas).
+        *   **Pull Requests (PR)**: Proceso formal de revisión de código por pares que permite proponer cambios, dejar comentarios e inspeccionar la calidad antes de la fusión.
+        *   **Branch Policies (Políticas de Ramas)**: Reglas que protegen ramas clave (`main`, `develop`), requiriendo compilaciones exitosas de CI, número mínimo de revisores y aprobación de lints antes de poder fusionar.
+*   **Azure Pipelines (Automatización de Compilaciones y Despliegues - CI/CD)**:
+    *   *Propósito*: Orquesta de forma automatizada la compilación, pruebas y despliegue continuo de código hacia servidores en la nube o infraestructura local.
+    *   *Conceptos Clave*:
+        *   **YAML Pipelines**: Pipelines modernos declarados como código en un archivo estructurado dentro del repositorio Git.
+        *   **Classic Pipelines**: Interfaz visual histórica basada en diagramas web de arrastrar y soltar (actualmente en desuso, priorizando YAML).
+        *   **Self-hosted Agents**: Agentes de ejecución instalados en servidores de la red corporativa del cliente para compilar y desplegar sin abrir puertos de entrada.
+        *   **Service Connections**: Conexiones de red seguras a recursos externos (GitLab, Azure, AWS) administradas centralmente sin revelar credenciales al código fuente.
+        *   **Environments (Entornos)**: Agrupadores lógicos de infraestructura (VMs, Kubernetes) vinculados a pipelines para aplicar aprobaciones manuales y verificaciones de salud de calidad (*Gates*).
+*   **Azure Test Plans (Suite de Control de Calidad)**:
+    *   *Propósito*: Proporciona herramientas web avanzadas para planificar, ejecutar y reportar pruebas manuales, automatizadas o exploratorias.
+    *   *Conceptos Clave*:
+        *   **Test Plans**: Contenedores lógicos de más alto nivel para coordinar campañas de pruebas asociadas a hitos específicos.
+        *   **Test Suites**: Agrupadores de pruebas (basadas en requisitos, consultas o estructura estática) que organizan los casos de prueba.
+        *   **Test Cases**: Pasos definidos y estructurados con resultados esperados para validar comportamientos funcionales específicos.
+        *   **Exploratory Testing**: Pruebas sin guion que registran capturas, video y logs del navegador dinámicamente mediante extensiones web para facilitar el reporte de errores.
+*   **Azure Artifacts (Gestión de Paquetes y Dependencias)**:
+    *   *Propósito*: Permite a la organización crear, hospedar y compartir feeds de paquetes (npm, NuGet, Python, Maven) de forma segura.
+    *   *Conceptos Clave*:
+        *   **Private Feeds**: Repositorios privados de componentes y librerías reutilizables exclusivas de la empresa.
+        *   **Upstream Sources**: Fuentes ascendentes conectadas a registros públicos (como npmjs o nuget.org) para almacenar en caché las librerías públicas utilizadas, previniendo fallos por caídas de servicios externos.
+
 ---
 
 ### Módulo 2: Modelo Operativo Esperado (45 min)
