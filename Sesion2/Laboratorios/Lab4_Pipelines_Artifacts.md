@@ -199,13 +199,14 @@ Dado que GitLab es una instancia local/on-premise en los laboratorios, utilizare
 #### 2. Crear y Ejecutar el Pipeline de Prueba
 1. Vaya a **Pipelines > Pipelines** en el menú izquierdo de Azure DevOps.
 2. Haga clic en **Create Pipeline** (o *New pipeline*).
-3. ¿Dónde está su código? Seleccione **Other Git** (o *External Git*).
-4. Configure el origen de código:
+3. En la pantalla "¿Dónde está su código?" (*Where is your code?*), haga clic en el botón **More options** (Más opciones) que está a la derecha del logo de GitHub.
+4. En el menú desplegable que se abre, seleccione **Other Git (YAML)**.
+5. Configure el origen de código:
    * **Connection**: Seleccione la conexión **`GitLab-Connection`** que creó en el paso anterior.
    * **Branch**: Seleccione la rama por defecto de su proyecto (generalmente `main` o `master`).
    * Haga clic en **Continue**.
-5. En la sección de configuración del pipeline, elija **Starter pipeline** (para crear una plantilla YAML vacía).
-6. Reemplace todo el contenido del archivo YAML con la siguiente configuración mínima para probar su agente auto-hospedado:
+6. En la sección de configuración del pipeline, elija **Starter pipeline** (para crear una plantilla YAML vacía).
+7. Reemplace todo el contenido del archivo YAML con la siguiente configuración mínima para probar su agente auto-hospedado:
    ```yaml
    trigger:
    - main
@@ -229,8 +230,8 @@ Dado que GitLab es una instancia local/on-premise en los laboratorios, utilizare
        echo "========================================="
      displayName: 'Prueba de Diagnóstico y Conectividad'
    ```
-7. Haga clic en **Save and run** (Guardar y ejecutar).
-8. Ingrese a la ejecución del pipeline y confirme que el trabajo sea tomado por su agente local (`Agente-Ubuntu-poc`) y termine en color verde. La salida del script debería mostrar que el agente clonó con éxito el archivo `README.md` del repositorio de GitLab y se está ejecutando bajo el usuario `azdevops`.
+8. Haga clic en **Save and run** (Guardar y ejecutar).
+9. Ingrese a la ejecución del pipeline y confirme que el trabajo sea tomado por su agente local (`Agente-Ubuntu-poc`) y termine en color verde. La salida del script debería mostrar que el agente clonó con éxito el archivo `README.md` del repositorio de GitLab y se está ejecutando bajo el usuario `azdevops`.
 
 ---
 
