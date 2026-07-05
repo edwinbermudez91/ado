@@ -121,11 +121,12 @@ class MeteoTest extends TestCase {
 ### Paso 2: Configurar Conexión de Servicio GitLab en Azure DevOps
 Para que Azure Pipelines pueda descargar su código de GitLab:
 1. En Azure DevOps, vaya a **Project Settings > Service Connections**.
-2. Haga clic en **New service connection** y seleccione **GitLab** (o **Other Git** si es una instancia local).
-3. Ingrese los detalles:
+2. Haga clic en **New service connection** y seleccione **Other Git** (conector recomendado para instancias locales/on-premise de GitLab).
+3. Ingrese los detalles de conexión:
    * **Connection name**: `GitLab-Meteo-Repo`
-   * **GitLab Server URL**: La URL de su servidor GitLab.
-   * **Personal Access Token**: Su token de GitLab con permisos mínimos de lectura de repositorio.
+   * **Git/Clone URL**: La URL de clonación de su repositorio de GitLab (ej: `http://<IP_O_DOMINIO_GITLAB>/root/servicios-meteorologicos.git`).
+   * **User name**: Escriba su usuario de GitLab (ej: `root`).
+   * **Password/Token**: Su token de acceso personal (PAT) de GitLab con alcances de lectura (`read_repository` y `api`).
 4. Haga clic en **Save** y valide que la conexión sea correcta.
 
 ---
