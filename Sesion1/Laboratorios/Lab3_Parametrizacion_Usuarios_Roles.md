@@ -54,11 +54,13 @@ En lugar de asignar permisos usuario por usuario, crearemos grupos según el rol
 Para evitar que un desarrollador de `Desarrolladores-Externos` modifique directamente la rama principal (`main`) o realice un *Force Push* (reescribir el historial de Git):
 
 #### 1. Configurar Permisos Generales sobre Repositorios
-1.  En **Project settings**, vaya a **Repositories**.
-2.  Haga clic en la pestaña **Security** en la parte superior derecha.
-3.  En la lista de grupos, seleccione `Desarrolladores-Externos`.
-4.  Busque el permiso **Force push (rewrite history, delete branches and tags)** y cámbielo explícitamente a **Deny** (Denegar).
-5.  Busque el permiso **Bypass policies when pushing** y cámbielo a **Deny**.
+1.  Asegúrese de estar en el proyecto **`Proyecto-Piloto`**. Si salió de la configuración, abra **Project settings** (Configuración del proyecto) en la esquina inferior izquierda.
+2.  En el menú lateral de configuración, bajo la sección **Repos**, haga clic en **Repositories**.
+3.  Haga clic en la pestaña **Security** en la parte superior derecha.
+4.  En la barra lateral izquierda, busque el grupo escribiendo `Desarrolladores-Externos` en el cuadro de búsqueda **`Search for users or groups`** (Buscar usuarios o grupos) y selecciónelo (los grupos personalizados no aparecen en la lista predeterminada hasta que se buscan).
+5.  Una vez seleccionado y agregado a la lista, asegúrese de hacer clic en él.
+6.  En el panel derecho, busque el permiso **Force push (rewrite history, delete branches and tags)** y cámbielo explícitamente a **Deny** (Denegar).
+7.  Busque el permiso **Bypass policies when pushing** y cámbielo a **Deny**.
 
 ```
 🔒 Seguridad del Repositorio para 'Desarrolladores-Externos':
@@ -67,16 +69,18 @@ Para evitar que un desarrollador de `Desarrolladores-Externos` modifique directa
 ```
 
 #### 2. Configurar Políticas de Rama (Branch Policies) en `main`
-1.  Vaya al menú lateral izquierdo, ingrese a **Repos > Branches**.
-2.  Si el repositorio está vacío, cree un archivo inicial rápido (haga clic en **Initialize** en la sección inferior del repositorio vacío). Esto creará automáticamente un archivo `README.md` en la rama `main`.
-3.  Una vez inicializado, regrese a **Repos > Branches**.
-4.  Pase el cursor sobre la rama `main`, haga clic en los tres puntos (`...`) a la derecha y seleccione **Branch policies**.
+1.  **Salga de la configuración del proyecto**: haga clic en el nombre del proyecto **`Proyecto-Piloto`** en la esquina superior izquierda (en la ruta de navegación o *breadcrumbs*) o haga clic en el botón de retroceso de su navegador. Esto le devolverá al panel principal del proyecto.
+2.  En el menú de navegación izquierdo principal, vaya a **Repos > Branches** (Repositorios > Ramas).
+3.  Si el repositorio está vacío, cree un archivo inicial rápido haciendo clic en el botón **Initialize** (en la sección inferior del mensaje de repositorio vacío). Esto creará automáticamente un archivo `README.md` en la rama `main`.
+4.  Una vez inicializado, regrese a **Repos > Branches** en el menú izquierdo.
+5.  Pase el cursor sobre la rama `main`, haga clic en los tres puntos (`...`) en el extremo derecho de la fila y seleccione **Branch policies** (Políticas de la rama).
 5.  Active las siguientes políticas de cumplimiento normativo:
     *   **Require a minimum number of reviewers**: Active este interruptor.
         *   Defina el número mínimo de revisores en **1** o **2**.
-        *   Marque la casilla *Prohibit originators from approving their own changes* (evita que el mismo desarrollador apruebe su propio código).
+        *   Asegúrese de mantener **desmarcada** la casilla **`Allow requestors to approve their own changes`** (esto prohíbe que el creador del Pull Request apruebe su propio código).
+        *   Marque la casilla **`Prohibit the most recent pusher from approving their own changes`** (evita que la última persona que subió código al Pull Request pueda auto-aprobarse).
     *   **Check for linked work items**: Active para forzar que todo cambio de código esté asociado a una tarea en los tableros.
-    *   **Check for resolution of comments**: Active para garantizar que todas las discusiones del código se resuelvan antes de fusionar.
+    *   **Check for comment resolution**: Active para garantizar que todas las discusiones del código se resuelvan antes de fusionar.
 
 ---
 
