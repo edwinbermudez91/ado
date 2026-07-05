@@ -183,12 +183,24 @@ Para permitir despliegues automáticos seguros, el usuario del agente (`azdevops
 ---
 
 ### Paso 6: Prueba de Conectividad y Primer Pipeline Híbrido (Opcional)
-Para validar que el agente auto-hospedado está operativo, tiene comunicación con su instancia de GitLab y puede procesar tareas enviadas por Azure DevOps, crearemos un pipeline básico de prueba de conectividad:
+Para validar que el agente auto-hospedado está operativo, tiene comunicación con su instancia de GitLab y puede procesar tareas enviadas por Azure DevOps, crearemos un pipeline básico de prueba de conectividad.
 
-#### 1. Crear una Conexión de Servicio hacia GitLab
-Dado que GitLab es una instancia local/on-premise en los laboratorios, utilizaremos el conector genérico **Other Git** para enlazar el repositorio:
+Dado que GitLab es una instancia local/on-premise en los laboratorios, utilizaremos el editor clásico y la conexión genérica **Other Git**.
+
+#### 1. Prerrequisito: Habilitar la Creación de Pipelines Clásicos (Classic Pipelines)
+En organizaciones nuevas de Azure DevOps, la creación de pipelines clásicos visuales viene desactivada por defecto. Debe habilitarse para usar "Other Git":
+1. En Azure DevOps, vaya a **Project Settings** (en la esquina inferior izquierda de la pantalla).
+2. Bajo la sección **Pipelines**, seleccione **Settings**.
+3. Desplácese hacia abajo hasta la sección **General**.
+4. Apague (coloque en **Off**) las siguientes dos opciones:
+   * **Disable creation of classic build pipelines** (Deshabilitar la creación de pipelines de compilación clásicos).
+   * **Disable creation of classic release pipelines** (Deshabilitar la creación de pipelines de liberación clásicos).
+5. Recargue la pestaña de su navegador para aplicar los cambios.
+
+#### 2. Crear una Conexión de Servicio hacia GitLab
+Antes de que Azure DevOps pueda clonar el repositorio, debe autenticarse frente a GitLab:
 1. En Azure DevOps, vaya a **Project Settings > Service connections**.
-2. Haga clic en **New service connection**, busque y seleccione **Other Git** en la lista (haga clic en **Next**).
+2. Haga clic en **New service connection**, busque y seleccione **Other Git** en la lista y haga clic en **Next**.
 3. Configure los campos de conexión:
    * **Connection name**: Ingrese `GitLab-Connection`.
    * **Git/Clone URL**: Ingrese la URL de clonación de su repositorio de GitLab (ej: `http://80-port-laevgigqlmmkzqu6.labs.kodekloud.com/root/poc-inm.git`).
@@ -196,46 +208,39 @@ Dado que GitLab es una instancia local/on-premise en los laboratorios, utilizare
    * **Password/Token**: Ingrese un token de acceso personal (PAT) de GitLab con alcances de lectura (`read_repository` y `api`) que puede generar en GitLab desde su perfil de usuario (*Preferences > Access Tokens*).
 4. Haga clic en **Save** para registrar la conexión.
 
-#### 2. Crear y Ejecutar el Pipeline de Prueba
+#### 3. Crear y Ejecutar el Pipeline de Prueba Clásico
 1. Vaya a **Pipelines > Pipelines** en el menú izquierdo de Azure DevOps.
-2. Haga clic en **Create Pipeline** (o *New pipeline*).
-3. En la pantalla "¿Dónde está su código?" (*Where is your code?*), haga clic en el botón **More options** (Más opciones) que está a la derecha del logo de GitHub.
-4. En el menú desplegable que se abre, seleccione **Other Git (YAML)**.
-5. Configure el origen de código:
+2. Haga clic en **New Pipeline** (o *Create Pipeline*).
+3. En la parte inferior de la pantalla "¿Dónde está su código?", haga clic en el enlace **`Use the classic editor`** (Usar el editor clásico).
+4. En la pantalla "Select a source", seleccione **Other Git**.
+5. Configure la conexión:
    * **Connection**: Seleccione la conexión **`GitLab-Connection`** que creó en el paso anterior.
-   * **Branch**: Seleccione la rama por defecto de su proyecto (generalmente `main` o `master`).
+   * **Default branch...**: Seleccione la rama por defecto de su proyecto (generalmente `main` o `master`).
    * Haga clic en **Continue**.
-6. En la sección de configuración del pipeline, elija **Starter pipeline** (para crear una plantilla YAML vacía).
-7. Reemplace todo el contenido del archivo YAML con la siguiente configuración mínima para probar su agente auto-hospedado:
-   ```yaml
-   trigger:
-   - main
-
-   pool:
-     name: 'Pool-OnPremise'
-     demands:
-     - Agent.Name -equals Agente-Ubuntu-poc
-
-   steps:
-   - script: |
-       echo "========================================="
-       echo "¡Conexión Exitosa con el Agente Local!"
-       echo "========================================="
-       echo "Usuario que ejecuta las tareas:"
-       whoami
-       echo "Directorios de trabajo del agente:"
-       pwd
-       echo "Contenido del repositorio clonado de GitLab:"
-       ls -la
-       echo "========================================="
-     displayName: 'Prueba de Diagnóstico y Conectividad'
+6. En la pantalla de selección de plantillas ("Select a template"), seleccione **Empty job** (Trabajo vacío) y haga clic en **Apply**.
+7. En la pestaña **Tasks**, haga clic en **Pipeline** (arriba a la izquierda de la lista de tareas) para definir dónde se ejecutará el pipeline:
+   * **Agent pool**: Seleccione **`Pool-OnPremise`**.
+   * **Demands**: Añada una regla haciendo clic en *Add* y configure `Agent.Name` - `equals` - `Agente-Ubuntu-poc`.
+8. Haga clic sobre **Agent job 1**, presione el icono **`+`** (Añadir tarea) a la derecha, busque la tarea **Command line** (Línea de comandos) y presione **Add**.
+9. Haga clic sobre la tarea **Command Line Script** recién añadida y reemplace el script en la caja de texto con lo siguiente:
+   ```bash
+   echo "========================================="
+   echo "¡Conexión Exitosa con el Agente Local!"
+   echo "========================================="
+   echo "Usuario que ejecuta las tareas:"
+   whoami
+   echo "Directorios de trabajo del agente:"
+   pwd
+   echo "Contenido del repositorio clonado de GitLab:"
+   ls -la
+   echo "========================================="
    ```
-8. Haga clic en **Save and run** (Guardar y ejecutar).
-9. Ingrese a la ejecución del pipeline y confirme que el trabajo sea tomado por su agente local (`Agente-Ubuntu-poc`) y termine en color verde. La salida del script debería mostrar que el agente clonó con éxito el archivo `README.md` del repositorio de GitLab y se está ejecutando bajo el usuario `azdevops`.
+10. Haga clic en el botón desplegable **Save & queue** (Guardar y encolar) en la barra superior, seleccione **Save & queue** y presione **Save and run**.
+11. Ingrese a la ejecución y confirme que el trabajo sea tomado por su agente local (`Agente-Ubuntu-poc`) y termine de forma exitosa (en verde). En los logs del pipeline, la salida del script deberá mostrar que el agente clonó con éxito el repositorio de GitLab y se está ejecutando bajo el usuario `azdevops`.
 
 ---
 
-### 🎯 Lista de Verificación (Checklist) de Finalización
+## 🎯 Lista de Verificación (Checklist) de Finalización
 
 | Estado | Hito / Tarea a Confirmar | Detalle y Validación Práctica |
 | :---: | :--- | :--- |
