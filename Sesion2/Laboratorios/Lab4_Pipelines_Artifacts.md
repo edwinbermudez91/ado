@@ -142,35 +142,15 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
 
 ---
 
-### Paso 4: Configuración de Red en Entornos Restringidos (Proxy y Certificados)
-Si el servidor del cliente requiere pasar por un proxy corporativo para salir a internet o si el GitLab local usa certificados SSL firmados por una entidad certificadora interna (Enterprise CA):
+### Paso 4: Confianza de Certificados SSL Corporativos Autofirmados (Self-Signed Certificates)
+Si el servidor de GitLab On-Premise tiene un certificado SSL firmado por una CA privada (entidad certificadora interna), el agente dará un error de conexión HTTPS al intentar comunicarse.
 
-1. **Configurar Salida a través de Proxy**:
-   Navegue al directorio de configuración y cree el archivo oculto `.proxy`:
-   ```bash
-   sudo -u azdevops nano /home/azdevops/myagent/.proxy
-   ```
-   Agregue la dirección del proxy en una sola línea:
-   ```text
-   http://proxy.miempresa.com:8080
-   ```
-   Si el proxy requiere autenticación:
-   ```text
-   http://usuario:contraseña@proxy.miempresa.com:8080
-   ```
-   Reinicie el servicio para aplicar los cambios de red:
-   ```bash
-   sudo ./svc.sh stop
-   sudo ./svc.sh start
-   ```
-2. **Confianza de Certificados SSL Corporativos Autofirmados (Self-Signed Certificates)**:
-   Si el servidor de GitLab On-Premise tiene un certificado SSL firmado por una CA privada, el agente dará un error de conexión HTTPS.
-   Copie el archivo de certificado de su CA (ej. `ca.crt`) al directorio de almacenamiento del servidor Ubuntu e incorpórelo al llavero del sistema:
-   ```bash
-   sudo cp ca.crt /usr/local/share/ca-certificates/enterprise-ca.crt
-   sudo update-ca-certificates
-   ```
-   El agente heredará de manera automática este llavero de confianza del sistema operativo.
+Para solucionarlo, copie el archivo de certificado de su CA (ej. `ca.crt`) al directorio de almacenamiento del servidor Ubuntu e incorpórelo al llavero de confianza del sistema operativo:
+```bash
+sudo cp ca.crt /usr/local/share/ca-certificates/enterprise-ca.crt
+sudo update-ca-certificates
+```
+El agente heredará de manera automática este llavero de confianza del sistema operativo.
 
 ---
 
