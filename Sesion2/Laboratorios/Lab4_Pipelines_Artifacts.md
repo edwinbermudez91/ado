@@ -203,7 +203,7 @@ Antes de que Azure DevOps pueda clonar el repositorio, debe autenticarse frente 
 2. Haga clic en **New service connection**, busque y seleccione **Other Git** en la lista y haga clic en **Next**.
 3. Configure los campos de conexión:
    * **Connection name**: Ingrese `GitLab-Connection`.
-   * **Git/Clone URL**: Ingrese la URL de clonación de su repositorio de GitLab (ej: `http://80-port-laevgigqlmmkzqu6.labs.kodekloud.com/root/poc-inm.git`).
+   * **Git/Clone URL**: Ingrese la URL de clonación de su repositorio de GitLab (ej: `http://gitlab.kodekloud.com/root/poc-inm.git`).
    * **User name**: Escriba su usuario de GitLab (ej: `root`).
    * **Password/Token**: Ingrese un token de acceso personal (PAT) de GitLab con alcances de lectura (`read_repository` y `api`) que puede generar en GitLab desde su perfil de usuario (*Preferences > Access Tokens*).
 4. Haga clic en **Save** para registrar la conexión.
