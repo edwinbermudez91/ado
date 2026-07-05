@@ -80,10 +80,6 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    sudo useradd -m -s /bin/bash azdevops
    sudo passwd azdevops # Defina una contraseña segura para este usuario
    ```
-   Otorgue permisos de administrador sin contraseña al usuario `azdevops` (indispensable para que el agente ejecute comandos administrativos de forma automatizada en sus pipelines):
-   ```bash
-   echo "azdevops ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/azdevops
-   ```
 2. **Descargar el agente de Azure Pipelines**:
    Inicie sesión como el usuario `azdevops`:
    ```bash
