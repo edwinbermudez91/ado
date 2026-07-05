@@ -134,11 +134,7 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    systemctl status vsts.agent.*
    ```
    *(Debería ver el estado como `active (running)` y habilitado para encenderse junto con el sistema).*
-7. **Comandos de Administración del Servicio (Opcional)**:
-   * **Detener el servicio**: `sudo ./svc.sh stop`
-   * **Reiniciar el servicio**: `systemctl restart vsts.agent.*`
-   * **Desinstalar el servicio**: `sudo ./svc.sh uninstall`
-8. En la consola web de Azure DevOps, vaya a **Organization Settings > Agent pools > Pool-OnPremise > Agents**. Verá el agente `Agente-Ubuntu-poc` en verde y con estado **Online**.
+7. En la consola web de Azure DevOps, vaya a **Organization Settings > Agent pools > Pool-OnPremise > Agents**. Verá el agente `Agente-Ubuntu-poc` en verde y con estado **Online**.
 
 ---
 
@@ -192,9 +188,26 @@ Para permitir despliegues automáticos seguros, el usuario del agente (`azdevops
 | Estado | Hito / Tarea a Confirmar | Detalle y Validación Práctica |
 | :---: | :--- | :--- |
 | 🔲 | **Prerrequisitos Instalados** | Ejecutar `php -v`, `composer --version` y validar que están operativos en la terminal. |
-| 🔲 | **Agente en Azure DevOps** | Verificar en *Organization Settings > Agent pools* que `Agente-Ubuntu-Meteo` esté activo e indicado en color verde (Online). |
+| 🔲 | **Agente en Azure DevOps** | Verificar en *Organization Settings > Agent pools* que `Agente-Ubuntu-poc` esté activo e indicado en color verde (Online). |
 | 🔲 | **Servicio Systemd Activo** | Ejecutar `sudo ./svc.sh status` y comprobar que el servicio está en ejecución (`active (running)`). |
 | 🔲 | **Gobernanza de Permisos** | Comprobar que los archivos creados en `/var/www/html/desarrollo` por el usuario `azdevops` hereden de manera automática el grupo `www-data`. |
 
 Proceda al [**Lab 5**](Lab5_Integracion_GitLab_Hybrid.md) para configurar el pipeline de integración continua, pruebas REST/SOAP y despliegue automatizado hacia el servidor web Apache haciendo uso del agente configurado.
+
+---
+
+### 🧹 Desmantelamiento y Limpieza (Opcional)
+Si al finalizar todos los laboratorios de la sesión desea remover el agente y limpiar los recursos creados tanto en el servidor Linux como en la consola de Azure DevOps, siga estos pasos opcionales:
+
+1. **Detener y desinstalar el servicio de Systemd**:
+   Salga de la sesión de `azdevops` si está en ella (`exit`) y, desde su usuario administrador con privilegios `sudo`, ejecute:
+   ```bash
+   cd /home/azdevops/myagent
+   sudo ./svc.sh stop
+   sudo ./svc.sh uninstall
+   ```
+2. **Eliminar el registro en Azure DevOps**:
+   * En la consola web de Azure DevOps, vaya a **Organization Settings > Agent pools**.
+   * Seleccione el pool **`Pool-OnPremise`** y haga clic en la pestaña **Agents**.
+   * Localice su agente `Agente-Ubuntu-poc`, haga clic en los tres puntos (`...`) a la derecha de la fila y seleccione **Delete** (Eliminar).
 
