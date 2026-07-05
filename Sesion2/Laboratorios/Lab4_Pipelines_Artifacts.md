@@ -85,12 +85,15 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    echo "azdevops ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/azdevops
    ```
 2. **Descargar el agente de Azure Pipelines**:
-   Inicie sesión como el usuario `azdevops` y cree un directorio de trabajo:
+   Inicie sesión como el usuario `azdevops`:
    ```bash
    sudo su - azdevops
+   ```
+   Cree un directorio de trabajo para el agente y acceda a él:
+   ```bash
    mkdir myagent && cd myagent
    ```
-   Descargue el paquete de instalación oficial (reemplazando el link por la versión más reciente en caso de requerirse):
+   Descargue el paquete de instalación oficial y descomprímalo:
    ```bash
    wget https://download.agent.dev.azure.com/agent/4.274.1/vsts-agent-linux-x64-4.274.1.tar.gz
    tar zxvf vsts-agent-linux-x64-4.274.1.tar.gz
