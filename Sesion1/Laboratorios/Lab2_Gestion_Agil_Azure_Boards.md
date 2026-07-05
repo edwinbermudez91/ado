@@ -240,24 +240,39 @@ Con los elementos asignados correctamente a la iteración, las tareas ahora se m
 ### Paso 5: Consultas (Queries) y Dashboards
 Para monitorear el proyecto de manera estratégica:
 
-#### 1. Crear una Consulta de Bugs Activos
+#### 1. Crear una Consulta de Bugs del Proyecto
 1.  En el menú izquierdo, vaya a **Boards > Queries**.
 2.  Haga clic en **New query** (Nueva consulta).
 3.  Configure las cláusulas de la consulta:
     *   `Work Item Type` `=` `Bug`
-    *   `And` `State` `=` `Active`
-4.  Haga clic en **Run query** (Ejecutar consulta) para comprobar los resultados.
+    *   `And` `State` `=` `[Any]` (seleccione **[Any]** para que la consulta muestre todos los bugs importados, ya que se encuentran en estado *New*).
+4.  Haga clic en **Run query** (Ejecutar consulta) para comprobar los resultados (debería ver al menos los dos bugs importados).
 5.  Haga clic en **Save query** (Guardar consulta):
     *   **Name**: `Bugs Activos del Proyecto`
-    *   **Folder**: Seleccione **Shared Queries** (para que otros miembros del equipo puedan verla).
+    *   **Folder**: Seleccione **Shared Queries** (Consultas compartidas).
+    > [!IMPORTANT]
+    > **Es obligatorio seleccionar la carpeta "Shared Queries"**. Si la guarda en *My Queries* (Mis consultas), no podrá seleccionarla en el widget del Dashboard.
 6.  Haga clic en **OK**.
 
-#### 2. Crear un Gráfico en el Dashboard
-1.  Estando en su consulta guardada, haga clic en la pestaña **Charts** (Gráficos) en la parte superior.
-2.  Haga clic en **New chart**.
-3.  Configure un gráfico de tipo **Pie** (Pastel) agrupado por **Assigned To** para ver quién tiene más bugs asignados.
-4.  Haga clic en **OK**.
-5.  Haga clic en los tres puntos (`...`) del gráfico y seleccione **Add to dashboard** para enviarlo a la pantalla de inicio del proyecto.
+#### 2. Crear un Nuevo Dashboard y Visualizar el Gráfico
+Para mostrar el gráfico de la consulta en un cuadro de mando:
+1.  En el menú de navegación izquierdo, vaya a **Overview > Dashboards** (Información general > Cuadros de mando).
+2.  Haga clic en el botón **+ New Dashboard** (Nuevo cuadro de mando) en la esquina superior derecha.
+3.  En el panel lateral derecho que aparece, configure lo siguiente:
+    *   **Name**: Escriba `Dashboard de Proyecto`.
+    *   **Dashboard Type**: Seleccione **Team Dashboard** (Dashboard de equipo).
+    *   Haga clic en el botón **Create** (Crear).
+4.  En su nuevo dashboard vacío, haga clic en el botón azul **Add a widget** (o en **Edit** -> **Add widget** en la parte superior derecha).
+5.  En el catálogo de la derecha, busque **"Chart for work items"** (Gráfico para elementos de trabajo) y haga clic en **Add** (Agregar).
+6.  Pase el cursor sobre el widget recién añadido al dashboard y haga clic en el icono del engranaje **⚙️** (Configurar) que aparece en su esquina superior derecha.
+7.  En el panel de configuración:
+    *   **Title**: Escriba `Bugs del Proyecto`.
+    *   **Query**: Seleccione la consulta compartida **`Shared Queries / Bugs Activos del Proyecto`**.
+    *   **Chart type**: Seleccione **Pie** (Pastel).
+    *   **Group by**: Seleccione **Assigned To** (Asignado a).
+    *   Haga clic en **Save** en la parte inferior del panel.
+8.  Haga clic en **Done Editing** (Listo) en la barra superior derecha del dashboard para guardar el diseño.
+
 
 ---
 
