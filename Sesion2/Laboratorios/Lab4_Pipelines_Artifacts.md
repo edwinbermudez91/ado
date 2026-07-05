@@ -88,8 +88,8 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    ```
    Descargue el paquete de instalación oficial (reemplazando el link por la versión más reciente en caso de requerirse):
    ```bash
-   wget https://vstsagentpackage.azureedge.net/agent/3.220.5/vsts-agent-linux-x64-3.220.5.tar.gz
-   tar zxvf vsts-agent-linux-x64-3.220.5.tar.gz
+   wget https://download.agent.dev.azure.com/agent/4.274.1/vsts-agent-linux-x64-4.274.1.tar.gz
+   tar zxvf vsts-agent-linux-x64-4.274.1.tar.gz
    ```
 3. **Registrar el Agente de forma No Interactiva**:
    Ejecute el script de configuración proporcionando los parámetros configurados en el Paso 2 (reemplace `<URL_DE_SU_ORGANIZACION>` con la URL de su organización, ej. `https://dev.azure.com/mi-empresa-coem` y `<PAT_TOKEN>` con el token guardado):
@@ -99,7 +99,7 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
      --auth pat \
      --token "<PAT_TOKEN>" \
      --pool "Pool-OnPremise" \
-     --agent "Agente-Ubuntu-Meteo" \
+     --agent "Agente-Ubuntu-poc" \
      --work "_work" \
      --acceptTeeAcceptance
    ```
@@ -114,15 +114,26 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    cd /home/azdevops/myagent
    sudo ./svc.sh install azdevops
    ```
+   *(Este comando creará de forma automática un archivo de servicio en systemd bajo el formato `vsts.agent.<organizacion>.<pool>.<nombre-agente>.service`).*
 5. **Iniciar el servicio del agente**:
    ```bash
    sudo ./svc.sh start
    ```
-6. **Verificar el estado del agente**:
+6. **Verificar el estado del servicio**:
+   Puede verificar que esté corriendo de forma exitosa usando el script del agente:
    ```bash
    sudo ./svc.sh status
    ```
-7. En la consola web de Azure DevOps, vaya a **Organization Settings > Agent pools > Pool-OnPremise > Agents**. Verá el agente `Agente-Ubuntu-Meteo` en verde y con estado **Online**.
+   O de forma alternativa utilizando comandos directos de `systemctl`:
+   ```bash
+   systemctl status vsts.agent.*
+   ```
+   *(Debería ver el estado como `active (running)` y habilitado para encenderse junto con el sistema).*
+7. **Comandos de Administración del Servicio (Opcional)**:
+   * **Detener el servicio**: `sudo ./svc.sh stop`
+   * **Reiniciar el servicio**: `systemctl restart vsts.agent.*`
+   * **Desinstalar el servicio**: `sudo ./svc.sh uninstall`
+8. En la consola web de Azure DevOps, vaya a **Organization Settings > Agent pools > Pool-OnPremise > Agents**. Verá el agente `Agente-Ubuntu-poc` en verde y con estado **Online**.
 
 ---
 
