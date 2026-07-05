@@ -137,10 +137,10 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
 
 ---
 
-### Paso 4: Confianza de Certificados SSL Corporativos Autofirmados (Self-Signed Certificates)
-Si el servidor de GitLab On-Premise tiene un certificado SSL firmado por una CA privada (entidad certificadora interna), el agente dará un error de conexión HTTPS al intentar comunicarse.
+### Paso 4: Confianza de Certificados SSL Corporativos Autofirmados (Self-Signed Certificates) (Opcional / Si Aplica)
+Este paso únicamente es necesario si su servidor de GitLab On-Premise utiliza un certificado SSL firmado por una CA privada (entidad certificadora interna). Si está utilizando HTTP o un certificado público de confianza (como el de KodeKloud), puede omitir esta sección.
 
-Para solucionarlo, copie el archivo de certificado de su CA (ej. `ca.crt`) al directorio de almacenamiento del servidor Ubuntu e incorpórelo al llavero de confianza del sistema operativo:
+Si aplica, copie el archivo de certificado de su CA (ej. `ca.crt`) al directorio de almacenamiento del servidor Ubuntu e incorpórelo al llavero de confianza del sistema operativo:
 ```bash
 sudo cp ca.crt /usr/local/share/ca-certificates/enterprise-ca.crt
 sudo update-ca-certificates
