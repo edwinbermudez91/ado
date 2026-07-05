@@ -80,6 +80,10 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    sudo useradd -m -s /bin/bash azdevops
    sudo passwd azdevops # Defina una contraseña segura para este usuario
    ```
+   Otorgue permisos de administrador sin contraseña al usuario `azdevops` (indispensable para que el agente ejecute comandos administrativos de forma automatizada en sus pipelines):
+   ```bash
+   echo "azdevops ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/azdevops
+   ```
 2. **Descargar el agente de Azure Pipelines**:
    Inicie sesión como el usuario `azdevops` y cree un directorio de trabajo:
    ```bash
@@ -114,13 +118,14 @@ Por razones de seguridad informática, los agentes nunca deben ser instalados ni
    cd /home/azdevops/myagent
    sudo ./svc.sh install azdevops
    ```
-   *(Este comando creará de forma automática un archivo de servicio en systemd bajo el formato `vsts.agent.<organizacion>.<pool>.<nombre-agente>.service`).*
+   *(Deberías ver una salida en la consola que indica que el servicio fue creado y habilitado exitosamente).*
 5. **Iniciar el servicio del agente**:
+   Una vez instalado, arranca el agente:
    ```bash
    sudo ./svc.sh start
    ```
 6. **Verificar el estado del servicio**:
-   Puede verificar que esté corriendo de forma exitosa usando el script del agente:
+   Confirma que ahora figure como instalado y corriendo:
    ```bash
    sudo ./svc.sh status
    ```
