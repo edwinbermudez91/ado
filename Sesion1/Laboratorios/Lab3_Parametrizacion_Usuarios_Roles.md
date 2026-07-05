@@ -115,4 +115,4 @@ Las conexiones de servicio permiten a los pipelines desplegar en nubes (Azure, A
 | 🔲 | **Políticas de Rama (main)** | Validar que la rama `main` requiere al menos 1 revisor externo y no permite auto-aprobación del autor. |
 | 🔲 | **Seguridad en Service Connection** | Comprobar que `Prod-Environment-Connection` restringe al grupo externo al rol de solo lectura (*Reader*). |
 
-Proceda a la [**Sesión 2**](../Sesion2/README.md) para iniciar con la Estrategia CI/CD e Integración Híbrida, o vaya directamente al [**Lab 4**](../Sesion2/Laboratorios/Lab4_Pipelines_Artifacts.md).
+Proceda a la [**Sesión 2**](../../Sesion2/README.md) para iniciar con la Estrategia CI/CD e Integración Híbrida, o vaya directamente al [**Lab 4**](../../Sesion2/Laboratorios/Lab4_Pipelines_Artifacts.md).
