@@ -179,6 +179,26 @@ Para permitir despliegues automáticos seguros, el usuario del agente (`azdevops
      sudo chmod g+s /var/www/html/desarrollo
      sudo chmod g+s /var/www/html/produccion
      ```
+5. **Validar la Gobernanza de Permisos (Comprobación Práctica)**:
+   Para confirmar que las políticas de acceso y la herencia de grupo (bit setgid) funcionan correctamente:
+   * Cambie temporalmente al usuario `azdevops`:
+     ```bash
+     sudo su - azdevops
+     ```
+   * Cree un archivo de prueba dentro de la carpeta de desarrollo:
+     ```bash
+     touch /var/www/html/desarrollo/test_permisos.txt
+     ```
+   * Enumere los detalles del archivo creado para inspeccionar los permisos y el grupo:
+     ```bash
+     ls -l /var/www/html/desarrollo/test_permisos.txt
+     ```
+     *(Debería ver que el archivo pertenece al usuario `azdevops` y al grupo `www-data` de forma automática, por ejemplo: `-rw-rw-r-- 1 azdevops www-data 0 Jul  6 07:44 test_permisos.txt`)*
+   * Elimine el archivo de prueba y regrese a su usuario normal:
+     ```bash
+     rm /var/www/html/desarrollo/test_permisos.txt
+     exit
+     ```
 
 ---
 
