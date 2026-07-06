@@ -26,6 +26,26 @@ Construiremos una aplicación web PHP para el control de temperaturas de las pri
 1. En su repositorio de GitLab, cree un nuevo proyecto o use el repositorio existente llamado `temperaturas-colombia`.
 2. Cree la siguiente estructura de archivos en la raíz del repositorio:
 
+```text
+temperaturas-colombia/
+├── src/
+│   └── TemperatureService.php      # Lógica de temperaturas y conversión Fahrenheit
+├── tests/
+│   └── TemperatureServiceTest.php  # Pruebas unitarias de PHPUnit
+├── composer.json                   # Dependencias de producción y desarrollo (PHPUnit, PHPCS)
+├── index.php                       # Interfaz visual de consulta de clima
+└── .gitignore                      # Exclusiones de Git (vendor/, .env, etc.)
+```
+
+#### `.gitignore`
+Evita subir dependencias locales y credenciales al repositorio GitLab:
+```text
+/vendor/
+.env
+composer.lock
+.phpunit.result.cache
+```
+
 #### `composer.json`
 Define las dependencias del proyecto. Utilizaremos `phpunit` para pruebas unitarias y `php_codesniffer` para asegurar las pautas de estilo de código (PSR-12).
 ```json
