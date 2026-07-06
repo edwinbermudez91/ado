@@ -72,9 +72,11 @@ Define las dependencias del proyecto. Utilizaremos `phpunit` para pruebas unitar
 Lógica de negocio de la aplicación que gestiona las temperaturas de las ciudades y la conversión de unidades.
 ```php
 <?php
+
 namespace App;
 
-class TemperatureService {
+class TemperatureService
+{
     private $temperaturas = [
         'Bogota' => 14.5,
         'Medellin' => 22.2,
@@ -84,7 +86,8 @@ class TemperatureService {
         'Bucaramanga' => 25.0
     ];
 
-    public function getTemperature(string $ciudad) {
+    public function getTemperature(string $ciudad)
+    {
         $ciudadNormalize = str_replace(
             ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'],
             ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'],
@@ -107,8 +110,9 @@ class TemperatureService {
         ];
     }
 
-    public function convertToFahrenheit(float $celsius): float {
-        return ($celsius * 9/5) + 32;
+    public function convertToFahrenheit(float $celsius): float
+    {
+        return ($celsius * 9 / 5) + 32;
     }
 }
 ```
@@ -117,25 +121,32 @@ class TemperatureService {
 Pruebas unitarias para validar el correcto funcionamiento del servicio y la conversión de grados.
 ```php
 <?php
+
+namespace Tests;
+
 use PHPUnit\Framework\TestCase;
 use App\TemperatureService;
 
-class TemperatureServiceTest extends TestCase {
-    public function testGetTemperatureSuccess() {
+class TemperatureServiceTest extends TestCase
+{
+    public function testGetTemperatureSuccess()
+    {
         $service = new TemperatureService();
         $response = $service->getTemperature('Medellín');
         $this->assertEquals('success', $response['status']);
         $this->assertEquals(22.2, $response['temperatura']);
     }
 
-    public function testGetTemperatureNotFound() {
+    public function testGetTemperatureNotFound()
+    {
         $service = new TemperatureService();
         $response = $service->getTemperature('Leticia');
         $this->assertEquals('error', $response['status']);
         $this->assertEquals('Ciudad no registrada en la red del INM', $response['message']);
     }
 
-    public function testConvertToFahrenheit() {
+    public function testConvertToFahrenheit()
+    {
         $service = new TemperatureService();
         $this->assertEquals(32, $service->convertToFahrenheit(0));
         $this->assertEquals(59, $service->convertToFahrenheit(15));
@@ -282,6 +293,11 @@ Dado que GitLab local está conectado por medio de un Service Connection ("Other
        ./vendor/bin/phpcs --standard=PSR12 src/ tests/
        ```
      * **Control Options**: Marque *Continue on error* si desea que el pipeline continúe aunque existan advertencias de estilos (opcional).
+     * > [!TIP]
+        > **¿Qué hacer si esta tarea falla por errores de estilo (PSR-12)?**  
+        > Puedes corregir casi todas las inconsistencias de formato automáticamente desde tu terminal local ejecutando:  
+        > `**./vendor/bin/phpcbf --standard=PSR12 src/ tests/**`.  
+        > Si reporta un error manual de namespace en los tests, añade `namespace Tests;` al inicio del archivo de pruebas.
 
    * **Tarea 4: Command Line (Análisis de Seguridad de Dependencias - DevSecOps)**
      * **Display name**: `Análisis de Vulnerabilidad en Dependencias`
