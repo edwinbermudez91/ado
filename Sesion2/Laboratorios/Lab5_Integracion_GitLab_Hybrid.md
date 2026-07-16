@@ -440,7 +440,7 @@ Deberás ejecutar el script de registro en cada uno de los servidores virtuales 
   * **Display name**: `Descomprimir Aplicación en /var/www/html`
   * **Archive file patterns**: `**/*.zip`
   * **Destination folder**: `/var/www/html`
-  * **Clean destination folder before extracting**: Marcado.
+  * **Clean destination folder before extracting**: Desmarcado (Recomendado para evitar errores de permisos al eliminar la carpeta raíz).
 
 * **Tarea 2: Command Line (Generación segura de Variables de Entorno y Permisos)**
   * **Display name**: `Generar archivo .env y Asegurar Permisos`
@@ -488,7 +488,7 @@ Deberás ejecutar el script de registro en cada uno de los servidores virtuales 
 
 * **Tarea 1: Extract Files**
   * **Destination folder**: `/var/www/html`
-  * **Clean destination folder**: Marcado.
+  * **Clean destination folder**: Desmarcado.
 
 * **Tarea 2: Command Line (Configuración y Seguridad en Prod)**
   * **Script**:
