@@ -15,9 +15,9 @@ Esta sesión de 4 horas aborda la automatización estratégica de compilaciones 
 ---
 
 ## 📂 Laboratorios de esta Sesión
-*   [**Lab 4: Instalación y Configuración del Agente Auto-Hospedado en Linux Ubuntu**](Laboratorios/Lab4_Pipelines_Artifacts.md)
-*   [**Lab 5: Pipeline Híbrido en Azure Pipelines, Pruebas REST/SOAP y Despliegue en Apache**](Laboratorios/Lab5_Integracion_GitLab_Hybrid.md)
-*   [**Lab 6: Pipeline Híbrido, Pruebas y Despliegue en Windows de una Aplicación Python**](Laboratorios/Lab6_Pipeline_Windows_Python.md)
+*   [**Lab 4: Instalación y Configuración del Agente Auto-Hospedado en Linux Ubuntu**](Laboratorios/Lab4_Self_Hosted_Agent.md)
+*   [**Lab 5: Pipeline Híbrido en Azure Pipelines, Pruebas REST/SOAP y Despliegue en Apache**](Laboratorios/Lab5_Hybrid_Pipeline_REST_SOAP_Apache.md)
+*   [**Lab 6: Pipeline Híbrido, Pruebas y Despliegue en Windows de una Aplicación Python**](Laboratorios/Lab6_Hybrid_Windows_Python_Deployment.md)
 
 ---
 
