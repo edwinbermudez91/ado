@@ -402,19 +402,44 @@ El despliegue se realizará a dos servidores virtuales Ubuntu independientes alo
 ---
 
 ### Paso 5: Definir las Tareas de Despliegue en las VMs de Azure (Desarrollo y Producción)
-Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corriendo en Azure, utilizaremos tareas ejecutadas en el contexto de sus agentes de despliegue correspondientes.
+Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corriendo de forma independiente en Azure (`vm-dev` y `vm-prod`), utilizaremos **Deployment Groups (Grupos de Despliegue)** de Azure DevOps. Esto permite registrar cada máquina virtual como un target de despliegue directo.
 
-*(Nota: Para este laboratorio utilizaremos los directorios locales de despliegue configurados en el Lab 4: `/var/www/html/desarrollo` y `/var/www/html/produccion` como simulación directa de los targets).*
+#### 1. Crear el Deployment Group en Azure DevOps:
+1. En Azure DevOps, vaya a **Pipelines > Deployment groups** en el menú izquierdo.
+2. Haga clic en **New** (o **Add a deployment group**).
+3. Asigne el nombre: `Meteo-Deployment-Group` y haga clic en **Create**.
+4. En la ventana que aparece, seleccione el tipo de sistema operativo: **Linux**.
+5. Copie el script de registro generado (asegúrese de marcar la opción *Use a personal access token in the script for authentication* si desea simplificar el registro).
+
+#### 2. Registrar los Servidores (`vm-dev` y `vm-prod`) como Targets:
+Deberás ejecutar el script de registro en cada uno de los servidores virtuales correspondientes:
+
+1. **Servidor de Desarrollo (`vm-dev`)**:
+   * Conéctese vía SSH: `ssh azdevops@<IP_PUBLICA_DEV>`.
+   * Ejecute el script de registro que copió en el paso anterior.
+   * Durante la configuración interactiva, el script le preguntará si desea añadir tags. Escriba: `desarrollo`.
+2. **Servidor de Producción (`vm-prod`)**:
+   * Conéctese vía SSH: `ssh azdevops@<IP_PUBLICA_PROD>`.
+   * Ejecute el mismo script de registro.
+   * Durante la configuración interactiva, añada el tag: `produccion`.
+
+*(Nota: Asegúrese de que ambos servidores tengan instalado Apache, PHP y los prerrequisitos descritos en el Lab 4 para poder servir la aplicación).*
+
+---
 
 #### Tareas del Stage: **Desarrollo**
 1. Haga clic en **Tasks** y seleccione la etapa **Desarrollo**.
-2. **Agent job**: Asegúrese de que el pool sea **Pool-OnPremise**.
-3. Agregue las siguientes tareas al trabajo:
+2. Remueva el **Agent job** predeterminado haciendo clic derecho sobre él y seleccionando **Remove**.
+3. Haga clic en los tres puntos (`...`) del stage y seleccione **Add a deployment group job** (Trabajo de grupo de despliegue).
+4. Configure el **Deployment Group Job**:
+   * **Deployment Group**: Seleccione `Meteo-Deployment-Group`.
+   * **Required tags**: Ingrese `desarrollo`.
+5. Dentro de este trabajo de grupo de despliegue, agregue las siguientes tareas haciendo clic en el botón `+`:
 
 * **Tarea 1: Extract Files (Extraer archivos)**
-  * **Display name**: `Descomprimir Aplicación en /var/www/html/desarrollo`
+  * **Display name**: `Descomprimir Aplicación en /var/www/html`
   * **Archive file patterns**: `**/*.zip`
-  * **Destination folder**: `/var/www/html/desarrollo`
+  * **Destination folder**: `/var/www/html`
   * **Clean destination folder before extracting**: Marcado.
 
 * **Tarea 2: Command Line (Generación segura de Variables de Entorno y Permisos)**
@@ -423,7 +448,7 @@ Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corr
     ```bash
     # Crear archivo .env usando las variables asignadas por Azure DevOps al grupo
     echo "Inyectando variables de entorno del ambiente Desarrollo..."
-    cat <<EOF > /var/www/html/desarrollo/.env
+    sudo cat <<EOF > /var/www/html/.env
     DB_HOST=$(DB_HOST)
     DB_USER=$(DB_USER)
     DB_PASSWORD=$(DB_PASSWORD)
@@ -432,7 +457,8 @@ Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corr
 
     # Principio de Privilegio Mínimo (DevSecOps)
     # Restringir los permisos del archivo .env para que solo el propietario y grupo de Apache puedan leerlo
-    chmod 640 /var/www/html/desarrollo/.env
+    sudo chmod 640 /var/www/html/.env
+    sudo chown -R www-data:www-data /var/www/html/
     ```
 
 * **Tarea 3: Command Line (Prueba de Humo / Smoke Test de Integridad)**
@@ -442,7 +468,7 @@ Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corr
     # Realiza una petición local para confirmar que Apache sirve el index sin errores 500
     echo "Validando accesibilidad..."
     sleep 3
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/desarrollo/index.php)
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/index.php)
     if [ "$HTTP_CODE" -eq 200 ]; then
         echo "¡Smoke Test exitoso! Retorno código HTTP 200"
     else
@@ -455,24 +481,28 @@ Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corr
 
 #### Tareas del Stage: **Producción**
 1. Regrese a la vista del Pipeline y seleccione las tareas del Stage **Producción**.
-2. Configure la misma secuencia de tareas que Desarrollo, adaptando los directorios para producción:
+2. Al igual que en Desarrollo, reemplace el **Agent job** por un **Deployment group job**:
+   * **Deployment Group**: Seleccione `Meteo-Deployment-Group`.
+   * **Required tags**: Ingrese `produccion`.
+3. Configure la misma secuencia de tareas que Desarrollo, apuntando a la raíz `/var/www/html`:
 
 * **Tarea 1: Extract Files**
-  * **Destination folder**: `/var/www/html/produccion`
+  * **Destination folder**: `/var/www/html`
   * **Clean destination folder**: Marcado.
 
 * **Tarea 2: Command Line (Configuración y Seguridad en Prod)**
   * **Script**:
     ```bash
     echo "Inyectando variables de entorno del ambiente Producción..."
-    cat <<EOF > /var/www/html/produccion/.env
+    sudo cat <<EOF > /var/www/html/.env
     DB_HOST=$(DB_HOST)
     DB_USER=$(DB_USER)
     DB_PASSWORD=$(DB_PASSWORD)
     API_ENV=$(API_ENV)
     EOF
 
-    chmod 640 /var/www/html/produccion/.env
+    sudo chmod 640 /var/www/html/.env
+    sudo chown -R www-data:www-data /var/www/html/
     ```
 
 * **Tarea 3: Command Line (Prueba de Humo de Producción)**
@@ -480,7 +510,7 @@ Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corr
     ```bash
     echo "Validando accesibilidad de Producción..."
     sleep 3
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/produccion/index.php)
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost/index.php)
     if [ "$HTTP_CODE" -eq 200 ]; then
         echo "¡Despliegue a producción verificado y operativo!"
     else
@@ -489,18 +519,19 @@ Dado que el despliegue es físico sobre dos servidores web Apache en Ubuntu corr
     fi
     ```
 
-3. Haga clic en **Save** en la esquina superior derecha para guardar el Release Pipeline.
+4. Haga clic en **Save** en la esquina superior derecha para guardar el Release Pipeline.
 
 ---
 
 ### Paso 6: Prueba del Ciclo Completo (End-to-End)
-1. Vaya a su Pipeline CI clásico y ejecute una nueva ejecución de compilación.
-2. Espere a que termine y valide en el log la correcta instalación de dependencias, la ejecución de las pruebas unitarias con PHPUnit y los escaneos de seguridad.
+1. Vaya a su Pipeline CI clásico y ejecute una nueva compilación.
+2. Espere a que termine y valide en el log la correcta instalación de dependencias, la ejecución de las pruebas unitarias y los escaneos de seguridad.
 3. Una vez finalizado el build, vaya a **Releases** y haga clic en **Create release**.
-4. Ingrese el despliegue. Verá que la etapa **Desarrollo** se ejecuta de manera automatizada y finaliza correctamente.
-5. Ingrese a la web local: `http://<IP-DE-SU-AGENTE>/desarrollo/index.php`. Seleccione una ciudad y observe cómo recupera los datos dinámicos y muestra la etiqueta `Entorno: Desarrollo`.
+4. Inicie el despliegue. Verá que la etapa **Desarrollo** se ejecuta de manera automatizada y despliega el código directamente en `vm-dev`.
+5. Accede a tu navegador: `http://<IP_PUBLICA_VM_DEV>/index.php`. Seleccione una ciudad y observe cómo recupera los datos dinámicos y muestra la etiqueta `Entorno: Desarrollo`.
 6. En Azure DevOps, verá que la etapa **Producción** queda en estado de espera ("Pending approval"). Proceda a aprobar el despliegue manual.
-7. Finalizada la ejecución de Producción, acceda a `http://<IP-DE-SU-AGENTE>/produccion/index.php` para verificar el cambio de variables al entorno productivo y la inyección exitosa de contraseñas de forma confidencial.
+7. Una vez finalizado el despliegue, accede a `http://<IP_PUBLICA_VM_PROD>/index.php` para verificar el cambio de variables al entorno productivo y la inyección exitosa de contraseñas de forma confidencial.
+
 
 ---
 
