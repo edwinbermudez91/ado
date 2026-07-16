@@ -37,8 +37,27 @@ Inicializa el directorio de trabajo para descargar el proveedor de Azure (`azure
 terraform init
 ```
 
-### 3. Modificar Variables (Opcional)
-Puedes personalizar los valores predeterminados (como la contraseña del administrador, tamaños de VM, etc.) modificando el archivo [variables.tf](file:///c:/Users/ebermudez/OneDrive%20-%20Controles%20Empresariales%20SAS/Documents/coem/Soporte/INM/Repositorio/ado/Infra/variables.tf) o creando un archivo `terraform.tfvars` con tu configuración personalizada (este último está en el `.gitignore` por seguridad).
+### 3. Modificar Variables y Contraseña (Opcional)
+Puedes personalizar los valores predeterminados (como la contraseña del administrador, nombres de usuario, o tamaños de VM). 
+
+Para cambiar la contraseña del administrador (`admin_password`), tienes tres opciones recomendadas:
+
+* **Opción A: Usar un archivo `terraform.tfvars` (Recomendado y más seguro)**
+  Crea un archivo llamado `terraform.tfvars` dentro del directorio `/Infra` y define la nueva contraseña (este archivo ya está ignorado en el `.gitignore` para no subir datos sensibles):
+  ```hcl
+  admin_password = "TuNuevaContraseñaSuperSegura123!"
+  ```
+
+* **Opción B: Pasar la variable por línea de comandos**
+  Puedes especificar la contraseña al ejecutar el plan o el apply:
+  ```bash
+  terraform plan -var="admin_password=TuNuevaContraseñaSuperSegura123!"
+  terraform apply -var="admin_password=TuNuevaContraseñaSuperSegura123!"
+  ```
+
+* **Opción C: Modificar directamente el archivo de variables**
+  Edita el valor de `default` en la variable `admin_password` dentro de [variables.tf](file:///c:/Users/ebermudez/OneDrive%20-%20Controles%20Empresariales%20SAS/Documents/coem/Soporte/INM/Repositorio/ado/Infra/variables.tf).
+
 
 ### 4. Planificar el despliegue
 Genera y revisa el plan de ejecución de Terraform para verificar qué recursos serán creados:
