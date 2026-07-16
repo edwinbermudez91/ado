@@ -26,7 +26,7 @@ Antes de instalar el agente, debemos asegurar que la máquina cuente con las her
 2. Actualice los índices de paquetes e instale el servidor web Apache, utilidades de compresión y Git:
    ```bash
    sudo apt update
-   sudo apt install -y apache2 git unzip curl ca-certificates
+   sudo apt install -y apache2 git zip unzip curl ca-certificates
    ```
    > [!WARNING]
    > **Conflicto de Puerto 80 (Address already in use):**  
