@@ -23,7 +23,8 @@ El programa de capacitación consta de dos sesiones de 4 horas cada una, organiz
 | **00:00 - 00:45** | Introducción a la Arquitectura y Licenciamiento | Vista general de Azure DevOps Services vs Server, SLAs, y revisión detallada del modelo de licenciamiento (Basic, Stakeholder, Visual Studio). | Conceptos Teóricos |
 | **00:45 - 01:30** | Modelo Operativo Esperado | Estructura organizacional recomendada (Organizaciones, Proyectos, Equipos) y cómo convivir con herramientas externas. | Conceptos Teóricos |
 | **01:30 - 02:30** | Validación de Prerrequisitos y Habilitación | Revisión de identidades (Entra ID), conectividad y navegación inicial en la configuración de la organización y proyectos. | [Lab 1: Habilitación y Navegación](Sesion1/Laboratorios/Lab1_Navegacion_Habilitacion.md) |
-| **02:30 - 03:30** | Parametrización y Gestión de Proyectos | Gestión ágil con Boards, creación de grupos de seguridad, asignación de permisos (RBAC), herencia y aislamiento de entornos. | [Lab 2: Gestión Ágil con Azure Boards](Sesion1/Laboratorios/Lab2_Gestion_Agil_Azure_Boards.md) <br> [Lab 3: Usuarios, Permisos y Aislamiento](Sesion1/Laboratorios/Lab3_Parametrizacion_Usuarios_Roles.md) |
+| **02:30 - 03:00** | Gestión Ágil de Proyectos | Planificación y gestión ágil del trabajo utilizando Azure Boards (sprints, backlogs y consultas). | [Lab 2: Gestión Ágil con Azure Boards](Sesion1/Laboratorios/Lab2_Gestion_Agil_Azure_Boards.md) |
+| **03:00 - 03:30** | Parametrización y Aislamiento | Configuración de usuarios, asignación de permisos (RBAC), grupos de seguridad y políticas de aislamiento de entornos. | [Lab 3: Parametrización de Usuarios y Roles](Sesion1/Laboratorios/Lab3_Parametrizacion_Usuarios_Roles.md) |
 | **03:30 - 04:00** | Preguntas y Cierre de Sesión | Espacio de debate, aclaración de dudas puntuales y conclusiones de la Sesión 1. | Panel de Discusión |
 
 ---
