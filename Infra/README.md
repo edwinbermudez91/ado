@@ -134,6 +134,13 @@ Una vez que la máquina virtual de GitLab (`vm-gitlab`) esté encendida, puedes 
    ```
    *Nota: Esta contraseña expira en 24 horas. Inicia sesión en `http://<gitlab_public_ip>` y cámbiala de inmediato.*
 
+6. **Cambiar/Restablecer la contraseña de `root` por CLI (Opcional):**
+   Si deseas cambiar o restablecer la contraseña del usuario administrador (`root`) directamente desde la consola del servidor en cualquier momento, ejecuta:
+   ```bash
+   sudo gitlab-rake "gitlab:password:reset[root]"
+   ```
+   La terminal te solicitará ingresar y confirmar la nueva contraseña.
+
 ---
 
 ## 🧹 Limpiar Recursos (Destruir)
