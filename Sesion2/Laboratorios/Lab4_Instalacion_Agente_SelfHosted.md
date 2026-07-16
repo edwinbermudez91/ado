@@ -32,9 +32,9 @@ Antes de instalar el agente, debemos asegurar que la máquina cuente con las her
    > **Conflicto de Puerto 80 (Address already in use):**  
    > Si estás instalando Apache en la misma máquina que aloja GitLab (`vm-gitlab`), la instalación fallará al intentar iniciar Apache. Esto se debe a que el servidor Nginx embebido en GitLab ya está utilizando el puerto 80.  
    > 
-   > **Para solucionarlo, cambia el puerto de Apache a 8080:**
-   > 1. Modifica el puerto de escucha: `sudo nano /etc/apache2/ports.conf` y cambia `Listen 80` por `Listen 8080`.
-   > 2. Modifica el host virtual predeterminado: `sudo nano /etc/apache2/sites-available/000-default.conf` (y/or `/etc/apache2/sites-enabled/000-default.conf`) y cambia `<VirtualHost *:80>` por `<VirtualHost *:8080>`.
+   > **Para solucionarlo, cambia el puerto de Apache a 8090:**
+   > 1. Modifica el puerto de escucha: `sudo nano /etc/apache2/ports.conf` y cambia `Listen 80` por `Listen 8090`.
+   > 2. Modifica el host virtual predeterminado: `sudo nano /etc/apache2/sites-available/000-default.conf` (y/o `/etc/apache2/sites-enabled/000-default.conf`) y cambia `<VirtualHost *:80>` por `<VirtualHost *:8090>`.
    > 3. Reinicia el servicio de Apache: `sudo systemctl restart apache2`.
 
 3. Instale PHP (soporta PHP 7.4 y 8.x) y las extensiones necesarias para conectarse a bases de datos, APIs REST (cURL) y servicios SOAP (XML):
