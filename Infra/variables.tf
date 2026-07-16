@@ -19,7 +19,6 @@ variable "admin_username" {
 variable "admin_password" {
   type        = string
   description = "Contraseña para el usuario administrador de las VMs"
-  default     = "InmPocPass2026!"
   sensitive   = true
 }
 
