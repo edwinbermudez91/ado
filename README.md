@@ -34,7 +34,7 @@ El programa de capacitación consta de dos sesiones de 4 horas cada una, organiz
 | Horario | Módulo / Tema | Descripción | Laboratorios Asociados |
 | :--- | :--- | :--- | :--- |
 | **00:00 - 01:15** | Conceptos Generales de CI/CD | Ciclo de vida del software, flujos de trabajo (GitFlow, Trunk-based), ambientes (Dev, QA, Prod) y aprobaciones manuales/Gates. | Conceptos Teóricos |
-| **01:15 - 02:30** | Agentes Híbridos en Ubuntu | Instalación paso a paso de un Agente Auto-Hospedado (Self-hosted Agent) de Azure Pipelines en Linux, configuración de red, proxy, SSL corporativo y permisos de Apache. | [Lab 4: Instalación de Agente en Ubuntu](Sesion2/Laboratorios/Lab4_Pipelines_Artifacts.md) |
+| **01:15 - 02:30** | Agentes Híbridos en Ubuntu | Instalación paso a paso de un Agente Auto-Hospedado (Self-hosted Agent) de Azure Pipelines en Linux, configuración de red, proxy, SSL corporativo y permisos de Apache. | [Lab 4: Instalación de Agente en Ubuntu](Sesion2/Laboratorios/Lab4_Instalacion_Agente_SelfHosted.md) |
 | **02:30 - 03:15** | Pipelines, Variables y Reutilización | Diseño de pipelines YAML multi-etapa integrados con GitLab, inyección de variables de entorno mediante Variable Groups, templates YAML y despliegue automático en Apache. | [Lab 5: Pipeline Híbrido, Pruebas y Despliegue PHP](Sesion2/Laboratorios/Lab5_Integracion_GitLab_Hybrid.md) |
 | **03:15 - 04:00** | Buenas Prácticas y Adopción Gradual | Seguridad en la ejecución de tareas, gobernanza en Windows/Linux, plantillas reutilizables y plan de adopción progresivo. | [Lab 6: Pipeline Windows y Python](Sesion2/Laboratorios/Lab6_Pipeline_Windows_Python.md) <br> Buenas Prácticas |
 
