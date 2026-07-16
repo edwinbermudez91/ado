@@ -102,9 +102,44 @@ terraform output
 
 ---
 
+## 🦊 Instalación de GitLab en el Servidor Aprovisionado
+
+Una vez que la máquina virtual de GitLab (`vm-gitlab`) esté encendida, puedes instalar **GitLab Community Edition (CE)** ejecutando los siguientes comandos en su terminal:
+
+1. **Conéctate al servidor vía SSH:**
+   ```bash
+   ssh azdevops@<gitlab_public_ip>
+   ```
+
+2. **Actualiza los paquetes del sistema e instala dependencias:**
+   ```bash
+   sudo apt-get update
+   sudo apt-get upgrade -y
+   sudo apt-get install -y curl openssh-server ca-certificates tzdata perl
+   ```
+
+3. **Añade el repositorio oficial de GitLab CE:**
+   ```bash
+   curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+   ```
+
+4. **Instala GitLab CE** (Reemplaza `<gitlab_public_ip>` con la IP pública real de tu VM):
+   ```bash
+   sudo EXTERNAL_URL="http://<gitlab_public_ip>" apt-get install gitlab-ce
+   ```
+
+5. **Obtén la contraseña temporal de administrador (usuario `root`):**
+   ```bash
+   sudo cat /etc/gitlab/initial_root_password
+   ```
+   *Nota: Esta contraseña expira en 24 horas. Inicia sesión en `http://<gitlab_public_ip>` y cámbiala de inmediato.*
+
+---
+
 ## 🧹 Limpiar Recursos (Destruir)
 Si necesitas eliminar por completo toda la infraestructura creada para evitar costos en Azure, ejecuta:
 ```bash
 terraform destroy
 ```
 *(Confirma escribiendo `yes` cuando lo solicite).*
+
