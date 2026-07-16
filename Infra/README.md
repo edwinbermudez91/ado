@@ -143,6 +143,36 @@ Una vez que la máquina virtual de GitLab (`vm-gitlab`) esté encendida, puedes 
 
 ---
 
+## 🌐 Configuración e Instalación de Apache & PHP en los Servidores de Destino (Dev y Prod)
+
+Para que el pipeline de despliegue continuo (CD) no falle al ejecutar las pruebas de humo ni al descomprimir los archivos en `/var/www/html/`, se debe instalar y configurar el servidor web **Apache** y **PHP** en los servidores virtuales de Desarrollo (`vm-dev`) y Producción (`vm-prod`):
+
+1. **Conéctese a cada servidor vía SSH:**
+   ```bash
+   ssh azdevops@<IP_PUBLICA_DEV_O_PROD>
+   ```
+
+2. **Actualice los paquetes del sistema e instale Apache, PHP, utilidades de compresión y dependencias:**
+   ```bash
+   sudo apt-get update
+   sudo apt-get install -y apache2 php php-cli php-common php-curl php-xml php-mbstring php-zip php-soap unzip zip
+   ```
+
+3. **Cree y configure los permisos de la carpeta web para permitir el despliegue automático:**
+   Dado que las tareas de Azure DevOps se ejecutan bajo el usuario del agente/deployment target, debemos asegurar que tenga permisos de escritura en la carpeta web:
+   ```bash
+   sudo mkdir -p /var/www/html
+   sudo chown -R azdevops:www-data /var/www/html
+   sudo chmod -R 775 /var/www/html
+   ```
+
+4. **Reinicie el servicio de Apache para aplicar cambios:**
+   ```bash
+   sudo systemctl restart apache2
+   ```
+
+---
+
 ## 🧹 Limpiar Recursos (Destruir)
 Si necesitas eliminar por completo toda la infraestructura creada para evitar costos en Azure, ejecuta:
 ```bash
