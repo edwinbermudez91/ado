@@ -15,9 +15,9 @@ Esta sesión de 4 horas aborda la automatización estratégica de compilaciones 
 ---
 
 ## 📂 Laboratorios de esta Sesión
-*   [**Lab 4: Instalación y Configuración del Agente Auto-Hospedado en Linux Ubuntu**](Laboratorios/Lab4_Self_Hosted_Agent.md)
-*   [**Lab 5: Pipeline Híbrido en Azure Pipelines, Pruebas REST/SOAP y Despliegue en Apache**](Laboratorios/Lab5_Hybrid_Pipeline_REST_SOAP_Apache.md)
-*   [**Lab 6: Pipeline Híbrido, Pruebas y Despliegue en Windows de una Aplicación Python**](Laboratorios/Lab6_Hybrid_Windows_Python_Deployment.md)
+*   [**Lab 4: Instalación y Configuración del Agente Auto-Hospedado en Linux Ubuntu**](Laboratorios/Lab4_Instalacion_Agente_SelfHosted.md)
+*   [**Lab 5: Pipeline Híbrido en Azure Pipelines, Pruebas REST/SOAP y Despliegue en Apache**](Laboratorios/Lab5_Integracion_GitLab_Hybrid.md)
+*   [**Lab 6: Pipeline Híbrido, Pruebas y Despliegue en Windows de una Aplicación Python**](Laboratorios/Lab6_Pipeline_Windows_Python.md)
 
 ---
 
@@ -174,5 +174,5 @@ Para medir la madurez DevOps de la organización, se implementa el marco de mét
 ---
 
 > [!TIP]
-> Proceda ahora al [**Lab 4**](Laboratorios/Lab4_Pipelines_Artifacts.md) para iniciar con la instalación y configuración del Agente Auto-Hospedado en su servidor Linux Ubuntu.
+> Proceda ahora al [**Lab 4**](Laboratorios/Lab4_Instalacion_Agente_SelfHosted.md) para iniciar con la instalación y configuración del Agente Auto-Hospedado en su servidor Linux Ubuntu.
 
