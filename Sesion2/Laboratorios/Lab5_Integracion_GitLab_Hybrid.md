@@ -303,11 +303,11 @@ Dado que GitLab local está conectado por medio de un Service Connection ("Other
      * **Display name**: `Análisis de Vulnerabilidad en Dependencias`
      * **Script**:
        ```bash
-       # Descargar herramienta liviana de auditoría de seguridad
-       curl -sSLo local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_linux_amd64
-       chmod +x local-php-security-checker
-       # Ejecutar análisis sobre composer.lock
-       ./local-php-security-checker --path=./composer.lock
+        # Descargar herramienta liviana de auditoría de seguridad
+        curl -sSLo local-php-security-checker https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64
+        chmod +x local-php-security-checker
+        # Ejecutar análisis sobre composer.lock
+        ./local-php-security-checker --path=./composer.lock
        ```
      * *(Nota: Esta herramienta verifica que no se introduzcan librerías con vulnerabilidades de seguridad conocidas en nuestro código).*
 
